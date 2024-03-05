@@ -18,7 +18,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import markisha.items.StrippedLogCR;
 
@@ -29,10 +28,7 @@ public class StrippedLogCrafting implements Listener {
 
 	private Random random;
 
-	JavaPlugin plugin;
-
-	public StrippedLogCrafting(JavaPlugin plugin) {
-		this.plugin = plugin;
+	public StrippedLogCrafting() {
 		this.random = new Random();
 	}
 

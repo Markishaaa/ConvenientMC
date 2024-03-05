@@ -12,8 +12,9 @@ public class Main extends JavaPlugin {
 	public void onEnable() {
 		StrippedLogCR slcr = new StrippedLogCR();
 		slcr.init();
-
-		getServer().getPluginManager().registerEvents(new StrippedLogCrafting(this), this);
+		getServer().getPluginManager().registerEvents(new StrippedLogCrafting(), this);
+		
+		
 		getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "[ConvenientMC]: Plugin enabled!");
 	}
 

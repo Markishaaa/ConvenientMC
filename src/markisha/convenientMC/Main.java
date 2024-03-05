@@ -5,6 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import markisha.events.StrippedLogCrafting;
 import markisha.items.StrippedLogCR;
+import markisha.items.WoodenItemCR;
 
 public class Main extends JavaPlugin {
 
@@ -14,6 +15,8 @@ public class Main extends JavaPlugin {
 		slcr.init();
 		getServer().getPluginManager().registerEvents(new StrippedLogCrafting(), this);
 		
+		WoodenItemCR wicr = new WoodenItemCR();
+		wicr.init();
 		
 		getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "[ConvenientMC]: Plugin enabled!");
 	}

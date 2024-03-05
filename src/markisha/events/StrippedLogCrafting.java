@@ -1,9 +1,12 @@
 package markisha.events;
 
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,11 +20,13 @@ import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import markisha.items.StrippedLogCR;
+
 public class StrippedLogCrafting implements Listener {
 
 	private ItemStack axe;
 	private ItemStack logs;
-	
+
 	private Random random;
 
 	JavaPlugin plugin;
@@ -36,9 +41,11 @@ public class StrippedLogCrafting implements Listener {
 		if (event.isRepair() || event.getRecipe() == null)
 			return;
 
-		RecipeChoice axeChoice = new RecipeChoice.MaterialChoice(Material.DIAMOND_AXE);
-		RecipeChoice logChoice = new RecipeChoice.ExactChoice(new ItemStack(Material.SPRUCE_LOG));
-		if (event.getRecipe().getResult().isSimilar(new ItemStack(Material.STRIPPED_SPRUCE_LOG))) {
+		RecipeChoice axeChoice = new RecipeChoice.MaterialChoice(StrippedLogCR.AXES);
+		List<ItemStack> logsItems = StrippedLogCR.LOGS.stream().map(ItemStack::new).collect(Collectors.toList());
+		RecipeChoice logChoice = new RecipeChoice.ExactChoice(logsItems);
+
+		if (event.getRecipe().getResult().getType().name().contains("STRIPPED_")) {
 			ItemStack[] matrix = event.getInventory().getMatrix();
 			for (int i = 0; i < matrix.length; i++) {
 				ItemStack item = matrix[i];
@@ -58,12 +65,18 @@ public class StrippedLogCrafting implements Listener {
 		CraftingInventory craftingInventory = (CraftingInventory) event.getInventory();
 		ItemStack result = craftingInventory.getResult();
 
-		if (result == null || !result.getType().equals(Material.STRIPPED_SPRUCE_LOG) || logs == null || axe == null)
+		if (result == null || !result.getType().name().contains("STRIPPED_") || logs == null || axe == null)
 			return;
 
 		event.setCancelled(true);
 
 		Player player = (Player) event.getWhoClicked();
+		if (!player.hasDiscoveredRecipe(NamespacedKey
+				.minecraft(result.getType().name().toLowerCase() + "_" + axe.getType().name().toLowerCase()))) {
+			player.discoverRecipe(NamespacedKey
+					.minecraft(result.getType().name().toLowerCase() + "_" + axe.getType().name().toLowerCase()));
+		}
+
 		Damageable dmgAxe = (Damageable) axe.getItemMeta();
 		int dmgAmount = 0;
 
@@ -109,7 +122,7 @@ public class StrippedLogCrafting implements Listener {
 		int logAmount = logs.getAmount();
 
 		PlayerInventory playerInventory = event.getWhoClicked().getInventory();
-		int logSlotWithSpace = findLogsSlotWithSpace(playerInventory);
+		int logSlotWithSpace = findLogsSlotWithSpace(playerInventory, strippedLog);
 
 		Damageable dmgAxe = (Damageable) axe.getItemMeta();
 		int axeDurability = axe.getType().getMaxDurability() - dmgAxe.getDamage();
@@ -117,8 +130,6 @@ public class StrippedLogCrafting implements Listener {
 		int amountToCraft = Math.min(axeDurability - 1, logAmount);
 
 		if (logSlotWithSpace == -1) {
-			System.out.println("no space");
-
 			int emptySlot = findEmptySlot(playerInventory);
 
 			if (emptySlot == -1 || logAmount <= 0)
@@ -150,16 +161,16 @@ public class StrippedLogCrafting implements Listener {
 
 		return amountToCraft;
 	}
-	
+
 	private int getDamageAmountBasedOnChance(Damageable axe, int n) {
 		int dmgAmount = 0;
 		double chance = getAxeDamageChance(axe);
-		
+
 		for (int i = 0; i < n; i++) {
 			if (random.nextDouble() < chance / 100.0)
 				dmgAmount++;
 		}
-		
+
 		return dmgAmount;
 	}
 
@@ -190,17 +201,17 @@ public class StrippedLogCrafting implements Listener {
 		return -1;
 	}
 
-	private int findLogsSlotWithSpace(PlayerInventory inventory) {
+	private int findLogsSlotWithSpace(PlayerInventory inventory, Material resultMaterial) {
 		ItemStack[] contents = inventory.getStorageContents();
 		for (int i = 0; i < contents.length; i++) {
 			ItemStack item = contents[i];
-			if (item != null && item.getType() == Material.STRIPPED_SPRUCE_LOG && item.getAmount() < 64) {
+			if (item != null && item.getType().equals(resultMaterial) && item.getAmount() < 64) {
 				return i;
 			}
 		}
 		return -1;
 	}
-	
+
 	private double getAxeDamageChance(Damageable axe) {
 		return 100 / (axe.getEnchantLevel(Enchantment.DURABILITY) + 1);
 	}

@@ -35,8 +35,7 @@ public class MoreYieldCR {
 		}
 
 		for (Material trapdoor : TRAPDOORS) {
-			updateWoodenTrapdoorRecipe(trapdoor, "1", "   ", "###", "###");
-			updateWoodenTrapdoorRecipe(trapdoor, "2", "###", "###", "   ");
+			updateWoodenTrapdoorRecipe(trapdoor);
 		}
 
 		for (Material button : BUTTONS) {
@@ -60,16 +59,16 @@ public class MoreYieldCR {
 		Bukkit.getServer().addRecipe(sr);
 	}
 
-	private void updateWoodenTrapdoorRecipe(Material trapdoorType, String key, String... shape) {
+	private void updateWoodenTrapdoorRecipe(Material trapdoorType) {
 		ItemStack result = new ItemStack(trapdoorType, 4);
 
 		String trapdoorId = trapdoorType.name().toLowerCase();
 		Bukkit.getServer().removeRecipe(NamespacedKey.minecraft(trapdoorId));
 
-		ShapedRecipe sr = new ShapedRecipe(NamespacedKey.minecraft(trapdoorId + "_" + key), result);
+		ShapedRecipe sr = new ShapedRecipe(NamespacedKey.minecraft(trapdoorId), result);
 
-		sr.shape(shape);
-		sr.setGroup("wooden_trapdoors_" + key);
+		sr.shape("###", "###");
+		sr.setGroup("wooden_trapdoors");
 		sr.setCategory(CraftingBookCategory.REDSTONE);
 		sr.setIngredient('#', getPlankType(trapdoorType.name()));
 
@@ -85,7 +84,7 @@ public class MoreYieldCR {
 		ShapelessRecipe sr = new ShapelessRecipe(NamespacedKey.minecraft(buttonId), result);
 
 		sr.addIngredient(getButtonIngredientType(buttonType.name()));
-		sr.setGroup("REDSTONE");
+		sr.setCategory(CraftingBookCategory.REDSTONE);
 
 		Bukkit.getServer().addRecipe(sr);
 	}

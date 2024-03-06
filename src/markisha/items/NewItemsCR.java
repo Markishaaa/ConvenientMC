@@ -14,6 +14,12 @@ public class NewItemsCR {
 		createShapelessRecipe(new ItemStack(Material.CLAY_BALL, 4), NamespacedKey.minecraft("clay_balls"),
 				CraftingBookCategory.BUILDING, Material.CLAY);
 		
+		createShapelessRecipe(new ItemStack(Material.SNOWBALL, 4), NamespacedKey.minecraft("snowballs"),
+				CraftingBookCategory.BUILDING, Material.SNOW_BLOCK);
+		
+		createShapelessRecipe(new ItemStack(Material.STRING, 4), NamespacedKey.minecraft("strings"),
+				CraftingBookCategory.BUILDING, Material.WHITE_WOOL);
+		
 		createMangroveLogRecipe();
 	}
 

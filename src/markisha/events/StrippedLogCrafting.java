@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -67,11 +66,6 @@ public class StrippedLogCrafting implements Listener {
 		event.setCancelled(true);
 
 		Player player = (Player) event.getWhoClicked();
-		if (!player.hasDiscoveredRecipe(NamespacedKey
-				.minecraft(result.getType().name().toLowerCase() + "_" + axe.getType().name().toLowerCase()))) {
-			player.discoverRecipe(NamespacedKey
-					.minecraft(result.getType().name().toLowerCase() + "_" + axe.getType().name().toLowerCase()));
-		}
 
 		Damageable dmgAxe = (Damageable) axe.getItemMeta();
 		int dmgAmount = 0;

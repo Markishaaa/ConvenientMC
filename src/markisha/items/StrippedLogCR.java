@@ -15,7 +15,7 @@ public class StrippedLogCR {
 	public final static List<Material> AXES = Arrays.asList(Material.WOODEN_AXE, Material.STONE_AXE, Material.IRON_AXE, Material.GOLDEN_AXE,
 			Material.DIAMOND_AXE, Material.NETHERITE_AXE);
 	public final static List<Material> LOGS = Arrays.asList(Material.ACACIA_LOG, Material.BIRCH_LOG, Material.CHERRY_LOG, Material.DARK_OAK_LOG,
-			Material.JUNGLE_LOG, Material.MANGROVE_LOG, Material.OAK_LOG, Material.SPRUCE_LOG, Material.CRIMSON_STEM, Material.WARPED_STEM);
+			Material.JUNGLE_LOG, Material.MANGROVE_LOG, Material.OAK_LOG, Material.SPRUCE_LOG, Material.CRIMSON_STEM, Material.WARPED_STEM, Material.BAMBOO_BLOCK);
 	
 	public void init() {
 		for (Material axe : AXES) {

@@ -34,7 +34,7 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 public class AllowEnchantments implements Listener {
 
 	private Map<Player, ItemStack> tridentMap;
-	private Map<Player, Integer> tridentProjLootingLvl;
+	private Map<Player, Integer> tridentProjLootingLvlMap;
 
 	private final List<Material> RARE_DROPS = Arrays.asList(Material.GOLD_INGOT, Material.IRON_INGOT, Material.CARROT,
 			Material.POTATO, Material.WITHER_SKELETON_SKULL);
@@ -43,14 +43,14 @@ public class AllowEnchantments implements Listener {
 
 	public AllowEnchantments() {
 		this.tridentMap = new HashMap<Player, ItemStack>();
-		this.tridentProjLootingLvl = new HashMap<Player, Integer>();
+		this.tridentProjLootingLvlMap = new HashMap<Player, Integer>();
 		this.random = new Random();
 	}
 
 	@EventHandler
 	public void onTridentLootingEnchant(PrepareAnvilEvent event) throws IllegalArgumentException {
 		Inventory inventory = event.getInventory();
-		Player player = (Player) event.getViewers().get(0);
+		Player player = (Player) event.getView().getPlayer();
 
 		RecipeChoice tridentChoice = new RecipeChoice.MaterialChoice(Material.TRIDENT);
 		RecipeChoice bookChoice = new RecipeChoice.MaterialChoice(Material.ENCHANTED_BOOK);
@@ -103,7 +103,7 @@ public class AllowEnchantments implements Listener {
 
 				ItemStack tridentItem = trident.getItem();
 
-				tridentProjLootingLvl.put((Player) trident.getShooter(), tridentItem.getItemMeta().getEnchantLevel(Enchantment.LOOT_BONUS_MOBS));
+				tridentProjLootingLvlMap.put((Player) trident.getShooter(), tridentItem.getItemMeta().getEnchantLevel(Enchantment.LOOT_BONUS_MOBS));
 			}
 		}
 	}
@@ -113,11 +113,11 @@ public class AllowEnchantments implements Listener {
 		LivingEntity entity = event.getEntity();
 		Player killer = entity.getKiller();
 		
-		if (tridentProjLootingLvl.get(killer) == null || tridentProjLootingLvl.get(killer) == 0)
+		if (tridentProjLootingLvlMap.get(killer) == null || tridentProjLootingLvlMap.get(killer) == 0)
 			return;
 
 		List<ItemStack> drops = event.getDrops();
-		int additionalDrops = calculateAdditionalDrops(tridentProjLootingLvl.get(killer));
+		int additionalDrops = calculateAdditionalDrops(tridentProjLootingLvlMap.get(killer));
 
 		for (int i = 0; i < drops.size(); i++) {
 			ItemStack drop = drops.get(i);
@@ -131,13 +131,13 @@ public class AllowEnchantments implements Listener {
 		Material rareDropMaterial = getRareDropMaterial(entity);
 
 		if (rareDropMaterial != null) {
-			int rareDropAmount = calculateRareDrops(tridentProjLootingLvl.get(killer));
+			int rareDropAmount = calculateRareDrops(tridentProjLootingLvlMap.get(killer));
 			if (rareDropAmount > 0) {
 				drops.add(new ItemStack(rareDropMaterial, rareDropAmount));
 			}
 		}
 
-		tridentProjLootingLvl.put(killer, 0);
+		tridentProjLootingLvlMap.put(killer, 0);
 	}
 
 	private int calculateAdditionalDrops(int lootingLevel) {

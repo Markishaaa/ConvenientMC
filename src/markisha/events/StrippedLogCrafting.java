@@ -1,6 +1,8 @@
 package markisha.events;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -22,13 +24,15 @@ import markisha.items.StrippedLogCR;
 
 public class StrippedLogCrafting implements Listener {
 
-	private ItemStack axe;
-	private ItemStack logs;
+	private Map<Player, ItemStack> axe;
+	private Map<Player, ItemStack> logs;
 
 	private Random random;
 
 	public StrippedLogCrafting() {
 		this.random = new Random();
+		this.axe = new HashMap<Player, ItemStack>();
+		this.logs = new HashMap<Player, ItemStack>();
 	}
 
 	@EventHandler
@@ -39,16 +43,18 @@ public class StrippedLogCrafting implements Listener {
 		RecipeChoice axeChoice = new RecipeChoice.MaterialChoice(StrippedLogCR.AXES);
 		List<ItemStack> logsItems = StrippedLogCR.LOGS.stream().map(ItemStack::new).collect(Collectors.toList());
 		RecipeChoice logChoice = new RecipeChoice.ExactChoice(logsItems);
-
+		Player player = (Player) event.getView().getPlayer();
+		
+		
 		if (event.getRecipe().getResult().getType().name().contains("STRIPPED_")) {
 			ItemStack[] matrix = event.getInventory().getMatrix();
 			for (int i = 0; i < matrix.length; i++) {
 				ItemStack item = matrix[i];
 				if (item != null) {
 					if (axeChoice.test(item)) {
-						axe = item;
+						axe.put(player, item);
 					} else if (logChoice.test(item)) {
-						logs = item;
+						logs.put(player, item);
 					}
 				}
 			}
@@ -59,18 +65,17 @@ public class StrippedLogCrafting implements Listener {
 	public void onStrippedLogCrafted(CraftItemEvent event) {
 		CraftingInventory craftingInventory = (CraftingInventory) event.getInventory();
 		ItemStack result = craftingInventory.getResult();
+		Player player = (Player) event.getWhoClicked();
 
-		if (result == null || !result.getType().name().contains("STRIPPED_") || logs == null || axe == null)
+		if (result == null || !result.getType().name().contains("STRIPPED_") || logs.get(player) == null || axe.get(player) == null)
 			return;
 
 		event.setCancelled(true);
 
-		Player player = (Player) event.getWhoClicked();
-
-		Damageable dmgAxe = (Damageable) axe.getItemMeta();
+		Damageable dmgAxe = (Damageable) axe.get(player).getItemMeta();
 		int dmgAmount = 0;
 
-		if (dmgAxe.getDamage() == axe.getType().getMaxDurability() - 1) {
+		if (dmgAxe.getDamage() == axe.get(player).getType().getMaxDurability() - 1) {
 			player.sendMessage(ChatColor.YELLOW + "[ConvenientMC]: Your axe is about to break.");
 			craftingInventory.setResult(null);
 			return;
@@ -85,22 +90,22 @@ public class StrippedLogCrafting implements Listener {
 				dmgAmount = 1;
 				player.setItemOnCursor(result);
 
-				logs.setAmount(logs.getAmount() - 1);
+				logs.get(player).setAmount(logs.get(player).getAmount() - 1);
 			} else if (cursorItem.getType().equals(result.getType()) && cursorItem.getAmount() < 64) {
 				dmgAmount = 1;
 				ItemStack item = player.getItemOnCursor();
 				item.setAmount(item.getAmount() + 1);
 				player.setItemOnCursor(item);
 
-				logs.setAmount(logs.getAmount() - 1);
+				logs.get(player).setAmount(logs.get(player).getAmount() - 1);
 			}
 		}
 
 		dmgAmount = getDamageAmountBasedOnChance(dmgAxe, dmgAmount);
 		dmgAxe.setDamage(dmgAxe.getDamage() + dmgAmount);
-		axe.setItemMeta(dmgAxe);
+		axe.get(player).setItemMeta(dmgAxe);
 
-		if (logs.getAmount() == 0) {
+		if (logs.get(player).getAmount() == 0) {
 			craftingInventory.setResult(null);
 			dmgAmount = 0;
 		}
@@ -108,14 +113,16 @@ public class StrippedLogCrafting implements Listener {
 
 	private int craftWithShiftClickAndGetAxeDamage(CraftItemEvent event, CraftingInventory craftingInventory,
 			Material strippedLog) {
+		Player player = (Player) event.getWhoClicked();
+		
 		int dmgAmount = 0;
-		int logAmount = logs.getAmount();
+		int logAmount = logs.get(player).getAmount();
 
-		PlayerInventory playerInventory = event.getWhoClicked().getInventory();
+		PlayerInventory playerInventory = player.getInventory();
 		int logSlotWithSpace = findLogsSlotWithSpace(playerInventory, strippedLog);
 
-		Damageable dmgAxe = (Damageable) axe.getItemMeta();
-		int axeDurability = axe.getType().getMaxDurability() - dmgAxe.getDamage();
+		Damageable dmgAxe = (Damageable) axe.get(player).getItemMeta();
+		int axeDurability = axe.get(player).getType().getMaxDurability() - dmgAxe.getDamage();
 
 		int amountToCraft = Math.min(axeDurability - 1, logAmount);
 
@@ -125,7 +132,7 @@ public class StrippedLogCrafting implements Listener {
 			if (emptySlot == -1 || logAmount <= 0)
 				return 0;
 
-			dmgAmount += stripAllLogs(strippedLog, playerInventory, emptySlot);
+			dmgAmount += stripAllLogs(strippedLog, player, playerInventory, emptySlot);
 
 			return dmgAmount;
 		}
@@ -138,16 +145,16 @@ public class StrippedLogCrafting implements Listener {
 
 		int logsToTransfer = Math.min(amountToCraft, spaceRemaining);
 
-		logs.setAmount(logAmount - logsToTransfer);
+		logs.get(player).setAmount(logAmount - logsToTransfer);
 		invLog.setAmount(invLog.getAmount() + logsToTransfer);
 		dmgAmount += logsToTransfer;
 
 		int emptySlot = findEmptySlot(playerInventory);
 
-		if (emptySlot == 1 || logs.getAmount() <= 0)
+		if (emptySlot == 1 || logs.get(player).getAmount() <= 0)
 			return dmgAmount;
 
-		stripAllLogs(strippedLog, playerInventory, emptySlot);
+		stripAllLogs(strippedLog, player, playerInventory, emptySlot);
 
 		return amountToCraft;
 	}
@@ -164,17 +171,17 @@ public class StrippedLogCrafting implements Listener {
 		return dmgAmount;
 	}
 
-	private int stripAllLogs(Material strippedLog, PlayerInventory playerInventory, int emptySlot) {
-		Damageable dmgAxe = (Damageable) axe.getItemMeta();
-		int axeDurability = axe.getType().getMaxDurability() - dmgAxe.getDamage();
+	private int stripAllLogs(Material strippedLog, Player player, PlayerInventory playerInventory, int emptySlot) {
+		Damageable dmgAxe = (Damageable) axe.get(player).getItemMeta();
+		int axeDurability = axe.get(player).getType().getMaxDurability() - dmgAxe.getDamage();
 
-		int logAmount = logs.getAmount();
+		int logAmount = logs.get(player).getAmount();
 		int amountToCraft = Math.min(axeDurability - 1, logAmount);
 
 		ItemStack strippedLogs = new ItemStack(strippedLog);
 
 		strippedLogs.setAmount(amountToCraft);
-		logs.setAmount(logAmount - amountToCraft);
+		logs.get(player).setAmount(logAmount - amountToCraft);
 
 		playerInventory.setItem(emptySlot, strippedLogs);
 		return amountToCraft;

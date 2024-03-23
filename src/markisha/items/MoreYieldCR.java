@@ -92,6 +92,11 @@ public class MoreYieldCR {
 	private Material getButtonIngredientType(String type) {
 		int endIndex = type.lastIndexOf("_");
 		type = type.substring(0, endIndex);
+		
+		// because bamboo exists and you need bamboo planks for buttons
+		if (type.equalsIgnoreCase("BAMBOO")) {
+			return Material.valueOf(type.toUpperCase() + "_PLANKS");
+		}
 
 		try {
 			return Material.valueOf(type.toUpperCase());

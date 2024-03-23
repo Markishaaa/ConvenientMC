@@ -40,22 +40,25 @@ public class StrippedLogCrafting implements Listener {
 		if (event.isRepair() || event.getRecipe() == null)
 			return;
 
+		ItemStack result = event.getRecipe().getResult();
+
+		if (!result.getType().name().contains("STRIPPED_") || (!result.getType().name().contains("_LOG")
+				&& !result.getType().name().contains("_STEM") && !result.getType().name().contains("_BLOCK")))
+			return;
+
 		RecipeChoice axeChoice = new RecipeChoice.MaterialChoice(StrippedLogCR.AXES);
 		List<ItemStack> logsItems = StrippedLogCR.LOGS.stream().map(ItemStack::new).collect(Collectors.toList());
 		RecipeChoice logChoice = new RecipeChoice.ExactChoice(logsItems);
 		Player player = (Player) event.getView().getPlayer();
-		
-		
-		if (event.getRecipe().getResult().getType().name().contains("STRIPPED_")) {
-			ItemStack[] matrix = event.getInventory().getMatrix();
-			for (int i = 0; i < matrix.length; i++) {
-				ItemStack item = matrix[i];
-				if (item != null) {
-					if (axeChoice.test(item)) {
-						axe.put(player, item);
-					} else if (logChoice.test(item)) {
-						logs.put(player, item);
-					}
+
+		ItemStack[] matrix = event.getInventory().getMatrix();
+		for (int i = 0; i < matrix.length; i++) {
+			ItemStack item = matrix[i];
+			if (item != null) {
+				if (axeChoice.test(item)) {
+					axe.put(player, item);
+				} else if (logChoice.test(item)) {
+					logs.put(player, item);
 				}
 			}
 		}
@@ -67,7 +70,12 @@ public class StrippedLogCrafting implements Listener {
 		ItemStack result = craftingInventory.getResult();
 		Player player = (Player) event.getWhoClicked();
 
-		if (result == null || !result.getType().name().contains("STRIPPED_") || logs.get(player) == null || axe.get(player) == null)
+		if (!result.getType().name().contains("STRIPPED_") || (!result.getType().name().contains("_LOG")
+				&& !result.getType().name().contains("_STEM") && !result.getType().name().contains("_BLOCK")))
+			return;
+		
+		if (result == null || logs.get(player) == null
+				|| axe.get(player) == null)
 			return;
 
 		event.setCancelled(true);
@@ -114,7 +122,7 @@ public class StrippedLogCrafting implements Listener {
 	private int craftWithShiftClickAndGetAxeDamage(CraftItemEvent event, CraftingInventory craftingInventory,
 			Material strippedLog) {
 		Player player = (Player) event.getWhoClicked();
-		
+
 		int dmgAmount = 0;
 		int logAmount = logs.get(player).getAmount();
 

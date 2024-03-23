@@ -23,10 +23,16 @@ public class MoreYieldCR {
 			Material.JUNGLE_TRAPDOOR, Material.MANGROVE_TRAPDOOR, Material.OAK_TRAPDOOR, Material.SPRUCE_TRAPDOOR,
 			Material.WARPED_TRAPDOOR);
 
-	public static final List<Material> BUTTONS = Arrays.asList(Material.ACACIA_BUTTON, Material.BAMBOO_BUTTON,
+	private static final List<Material> BUTTONS = Arrays.asList(Material.ACACIA_BUTTON, Material.BAMBOO_BUTTON,
 			Material.BIRCH_BUTTON, Material.CHERRY_BUTTON, Material.CRIMSON_BUTTON, Material.DARK_OAK_BUTTON,
 			Material.JUNGLE_BUTTON, Material.MANGROVE_BUTTON, Material.OAK_BUTTON, Material.POLISHED_BLACKSTONE_BUTTON,
 			Material.SPRUCE_BUTTON, Material.STONE_BUTTON, Material.WARPED_BUTTON);
+
+	private static final List<Material> BANNERS = Arrays.asList(Material.BLACK_BANNER, Material.BLUE_BANNER,
+			Material.BROWN_BANNER, Material.CYAN_BANNER, Material.GRAY_BANNER, Material.GRAY_BANNER,
+			Material.GREEN_BANNER, Material.LIGHT_BLUE_BANNER, Material.LIGHT_GRAY_BANNER, Material.LIME_BANNER,
+			Material.MAGENTA_BANNER, Material.ORANGE_BANNER, Material.ORANGE_BANNER, Material.PINK_BANNER,
+			Material.PURPLE_BANNER, Material.RED_BANNER, Material.WHITE_BANNER, Material.YELLOW_BANNER);
 
 	public void init() {
 		for (Material stair : STAIRS) {
@@ -40,6 +46,10 @@ public class MoreYieldCR {
 
 		for (Material button : BUTTONS) {
 			updateButtonRecipes(button);
+		}
+
+		for (Material banner : BANNERS) {
+			updateBannerRecipes(banner);
 		}
 	}
 
@@ -89,10 +99,32 @@ public class MoreYieldCR {
 		Bukkit.getServer().addRecipe(sr);
 	}
 
+	private void updateBannerRecipes(Material bannerType) {
+		ItemStack result = new ItemStack(bannerType, 4);
+
+		String bannerId = bannerType.name().toLowerCase();
+		Bukkit.getServer().removeRecipe(NamespacedKey.minecraft(bannerId));
+
+		ShapedRecipe sr = new ShapedRecipe(NamespacedKey.minecraft(bannerId), result);
+
+		sr.shape("###", "###", " / ");
+		sr.setIngredient('#', getWoolIngredientType(bannerType.name()));
+		sr.setIngredient('/', Material.STICK);
+		sr.setCategory(CraftingBookCategory.MISC);
+
+		Bukkit.getServer().addRecipe(sr);
+	}
+
+	private Material getWoolIngredientType(String type) {
+		String color = type.substring(0, type.lastIndexOf('_'));
+
+		return Material.valueOf(color.toUpperCase() + "_WOOL");
+	}
+
 	private Material getButtonIngredientType(String type) {
 		int endIndex = type.lastIndexOf("_");
 		type = type.substring(0, endIndex);
-		
+
 		// because bamboo exists and you need bamboo planks for buttons
 		if (type.equalsIgnoreCase("BAMBOO")) {
 			return Material.valueOf(type.toUpperCase() + "_PLANKS");

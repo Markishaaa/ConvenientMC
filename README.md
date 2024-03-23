@@ -16,6 +16,7 @@ Increase the yield for various crafting recipes, such as:
 - Wooden stairs (now gives 6 instead of 4)
 - Wooden trapdoors (now gives 4 instead of 2)
 - All buttons (now gives 4 instead of 1)
+- Banners (now gives 4 instead of 1)
 
 ### 3. New Crafting Recipes
 Discover new crafting possibilities, including:

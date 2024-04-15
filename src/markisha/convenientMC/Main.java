@@ -1,14 +1,17 @@
 package markisha.convenientMC;
 
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import markisha.events.AllowEnchantments;
+import markisha.events.CombatImprovements;
+import markisha.events.EntityImprovements;
 import markisha.events.StrippedLogCrafting;
 import markisha.items.MoreYieldCR;
 import markisha.items.NewItemsCR;
 import markisha.items.StrippedLogCR;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 
 public class Main extends JavaPlugin {
 
@@ -20,6 +23,7 @@ public class Main extends JavaPlugin {
 			getConfig().set("features.enable_more_yield_in_crafting_recipes", true);
 			getConfig().set("features.enable_new_crafting_recipes", true);
 			getConfig().set("features.allow_modified_enchantments", true);
+			getConfig().set("features.allow_combat_improvements", true);
 			saveConfig();
 		}
 
@@ -34,6 +38,7 @@ public class Main extends JavaPlugin {
 		boolean enableMoreYieldInCraftingRecipes = features.getBoolean("enable_more_yield_in_crafting_recipes", true);
 		boolean enableNewCraftingRecipes = features.getBoolean("enable_new_crafting_recipes", true);
 		boolean allowModifiedEnchantments = features.getBoolean("allow_modified_enchantments", true);
+		boolean allowCombatImprovements = features.getBoolean("features.allow_combat_improvements", true);
 
 		if (enableStrippedLogCrafting) {
 			StrippedLogCR slcr = new StrippedLogCR();
@@ -55,12 +60,20 @@ public class Main extends JavaPlugin {
 			getServer().getPluginManager().registerEvents(new AllowEnchantments(), this);
 		}
 
-		getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "[ConvenientMC]: Plugin enabled!");
+		if (allowCombatImprovements) {
+			getServer().getPluginManager().registerEvents(new CombatImprovements(this), this);
+		}
+		
+		getServer().getPluginManager().registerEvents(new EntityImprovements(this), this);
+
+		getServer().getConsoleSender().sendMessage(
+				Component.text("[ConvenientMC]: Plugin enabled!").color(TextColor.fromHexString("#FFFF00")));
 	}
 
 	@Override
 	public void onDisable() {
-		getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "[ConvenientMC]: Plugin disabled!");
+		getServer().getConsoleSender().sendMessage(
+				Component.text("[ConvenientMC]: Plugin disabled!").color(TextColor.fromHexString("#FFFF00")));
 	}
 
 	private void loadConfig() {

@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -21,6 +20,8 @@ import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.meta.Damageable;
 
 import markisha.items.StrippedLogCR;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 
 public class StrippedLogCrafting implements Listener {
 
@@ -73,9 +74,8 @@ public class StrippedLogCrafting implements Listener {
 		if (!result.getType().name().contains("STRIPPED_") || (!result.getType().name().contains("_LOG")
 				&& !result.getType().name().contains("_STEM") && !result.getType().name().contains("_BLOCK")))
 			return;
-		
-		if (result == null || logs.get(player) == null
-				|| axe.get(player) == null)
+
+		if (result == null || logs.get(player) == null || axe.get(player) == null)
 			return;
 
 		event.setCancelled(true);
@@ -84,7 +84,7 @@ public class StrippedLogCrafting implements Listener {
 		int dmgAmount = 0;
 
 		if (dmgAxe.getDamage() == axe.get(player).getType().getMaxDurability() - 1) {
-			player.sendMessage(ChatColor.YELLOW + "[ConvenientMC]: Your axe is about to break.");
+			player.sendMessage(Component.text("[ConvenientMC]: Your axe is about to break.").color(TextColor.fromHexString("#FFFF00")));
 			craftingInventory.setResult(null);
 			return;
 		}

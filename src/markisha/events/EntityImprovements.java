@@ -65,7 +65,7 @@ public class EntityImprovements implements Listener {
 
 		event.setCancelled(true);
 
-		player.playSound(Sound.sound(Key.key("entity.villager.celebrate"), Source.VOICE, 1f, 1f));
+		villager.getLocation().getWorld().playSound(Sound.sound(Key.key("entity.villager.celebrate"), Source.VOICE, 1f, 1f));
 
 		interactingVillagers.put(player, villager);
 		processingVillagers.add(villager);
@@ -97,7 +97,7 @@ public class EntityImprovements implements Listener {
 				if (villager.getLocation().distanceSquared(camel.getLocation()) <= 3) {
 					camel.addPassenger(villager);
 					villager.setTarget(null);
-					player.playSound(Sound.sound(Key.key("entity.villager.celebrate"), Source.VOICE, 1f, 1f));
+					villager.getLocation().getWorld().playSound(Sound.sound(Key.key("entity.villager.celebrate"), Source.VOICE, 1f, 1f));
 
 					processingVillagers.remove(villager);
 					interactingVillagers.remove(player);

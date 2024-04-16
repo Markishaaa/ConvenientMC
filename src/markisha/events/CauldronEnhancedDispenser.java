@@ -16,7 +16,7 @@ import org.bukkit.potion.PotionType;
 
 import io.papermc.paper.event.block.BlockPreDispenseEvent;
 
-public class RedstoneImprovements implements Listener {
+public class CauldronEnhancedDispenser implements Listener {
 
 	@EventHandler
 	public void beforeDispensing(BlockPreDispenseEvent event) {

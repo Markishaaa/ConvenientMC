@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import markisha.events.AllowEnchantments;
 import markisha.events.CombatImprovements;
 import markisha.events.EntityImprovements;
+import markisha.events.RedstoneImprovements;
 import markisha.events.StrippedLogCrafting;
 import markisha.items.MoreYieldCR;
 import markisha.items.NewItemsCR;
@@ -65,6 +66,8 @@ public class Main extends JavaPlugin {
 		}
 		
 		getServer().getPluginManager().registerEvents(new EntityImprovements(this), this);
+		
+		getServer().getPluginManager().registerEvents(new RedstoneImprovements(), this);
 
 		getServer().getConsoleSender().sendMessage(
 				Component.text("[ConvenientMC]: Plugin enabled!").color(TextColor.fromHexString("#FFFF00")));

@@ -87,7 +87,7 @@ public class AllowEnchantments implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onProjectileHit(ProjectileHitEvent event) {
 		if (!(event.getHitEntity() instanceof LivingEntity))
@@ -101,9 +101,10 @@ public class AllowEnchantments implements Listener {
 
 			if (entity.getHealth() - trident.getDamage() <= 0) {
 
-				ItemStack tridentItem = trident.getItem();
+				ItemStack tridentItem = trident.getItemStack();
 
-				tridentProjLootingLvlMap.put((Player) trident.getShooter(), tridentItem.getItemMeta().getEnchantLevel(Enchantment.LOOT_BONUS_MOBS));
+				tridentProjLootingLvlMap.put((Player) trident.getShooter(),
+						tridentItem.getItemMeta().getEnchantLevel(Enchantment.LOOT_BONUS_MOBS));
 			}
 		}
 	}
@@ -112,7 +113,7 @@ public class AllowEnchantments implements Listener {
 	public void onEntityDeath(EntityDeathEvent event) {
 		LivingEntity entity = event.getEntity();
 		Player killer = entity.getKiller();
-		
+
 		if (tridentProjLootingLvlMap.get(killer) == null || tridentProjLootingLvlMap.get(killer) == 0)
 			return;
 

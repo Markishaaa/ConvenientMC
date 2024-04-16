@@ -17,18 +17,28 @@ import net.kyori.adventure.text.format.TextColor;
 public class Main extends JavaPlugin {
 
 	private ConfigurationSection features;
-
+	
 	public Main() {
 		if (getConfig().getConfigurationSection("features") == null) {
-			getConfig().set("features.enable_stripped_log_crafting", true);
-			getConfig().set("features.enable_more_yield_in_crafting_recipes", true);
-			getConfig().set("features.enable_new_crafting_recipes", true);
-			getConfig().set("features.allow_modified_enchantments", true);
-			getConfig().set("features.allow_combat_improvements", true);
-			saveConfig();
-		}
+	        getConfig().createSection("features");
+	        saveConfig();
+	    }
 
 		this.features = getConfig().getConfigurationSection("features");
+		
+		setDefaultBoolean("enable_stripped_log_crafting", true);
+	    setDefaultBoolean("enable_more_yield_in_crafting_recipes", true);
+	    setDefaultBoolean("enable_new_crafting_recipes", true);
+	    setDefaultBoolean("allow_modified_enchantments", true);
+	    setDefaultBoolean("allow_combat_improvements", true);
+	    setDefaultBoolean("allow_camel_villager_transport", true);
+	    setDefaultBoolean("allow_cauldron_enhanced_dispensers", true);
+	}
+	
+	private void setDefaultBoolean(String key, boolean defaultValue) {
+	    if (!features.contains(key)) {
+	        features.set(key, defaultValue);
+	    }
 	}
 
 	@Override
@@ -40,6 +50,8 @@ public class Main extends JavaPlugin {
 		boolean enableNewCraftingRecipes = features.getBoolean("enable_new_crafting_recipes", true);
 		boolean allowModifiedEnchantments = features.getBoolean("allow_modified_enchantments", true);
 		boolean allowCombatImprovements = features.getBoolean("features.allow_combat_improvements", true);
+		boolean allowCamelVillagerTransport = features.getBoolean("features.allow_camel_villager_transport", true);
+		boolean allowCauldronEnhancedDispensers = features.getBoolean("features.allow_cauldron_enhanced_dispensers", true);
 
 		if (enableStrippedLogCrafting) {
 			StrippedLogCR slcr = new StrippedLogCR();
@@ -65,10 +77,14 @@ public class Main extends JavaPlugin {
 			getServer().getPluginManager().registerEvents(new CombatImprovements(this), this);
 		}
 		
-		getServer().getPluginManager().registerEvents(new EntityImprovements(this), this);
+		if (allowCamelVillagerTransport) {
+			getServer().getPluginManager().registerEvents(new EntityImprovements(this), this);
+		}
 		
-		getServer().getPluginManager().registerEvents(new CauldronEnhancedDispenser(), this);
-
+		if (allowCauldronEnhancedDispensers) {
+			getServer().getPluginManager().registerEvents(new CauldronEnhancedDispenser(), this);
+		}
+		
 		getServer().getConsoleSender().sendMessage(
 				Component.text("[ConvenientMC]: Plugin enabled!").color(TextColor.fromHexString("#FFFF00")));
 	}

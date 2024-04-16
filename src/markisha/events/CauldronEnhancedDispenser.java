@@ -1,6 +1,8 @@
 package markisha.events;
 
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Dispenser;
@@ -68,6 +70,7 @@ public class CauldronEnhancedDispenser implements Listener {
 			}
 
 			ItemStack waterBottle = createWaterBottle();
+			playSound(cauldron, bucket);
 			swapBuckets(waterBottle, dispenser, slot);
 		} else if (cauldron.getType() == Material.WATER_CAULDRON && bucketMeta instanceof PotionMeta
 				&& ((PotionMeta) bucketMeta).getBasePotionType() == PotionType.WATER) {
@@ -76,6 +79,7 @@ public class CauldronEnhancedDispenser implements Listener {
 				cauldron.setBlockData(cauldronLevel);
 			}
 
+			playSound(cauldron, bucket);
 			swapBuckets(new ItemStack(Material.GLASS_BOTTLE), dispenser, slot);
 		} else if (material == Material.BUCKET) {
 			if (cauldronLevel.getLevel() < cauldronLevel.getMaximumLevel())
@@ -86,6 +90,7 @@ public class CauldronEnhancedDispenser implements Listener {
 
 			Material newBucket = Material.getMaterial(cauldronType + "_BUCKET");
 
+			playSound(cauldron, bucket);
 			swapBuckets(new ItemStack(newBucket), dispenser, slot);
 		} else {
 			if (material == Material.GLASS_BOTTLE || bucketMeta instanceof PotionMeta)
@@ -115,6 +120,7 @@ public class CauldronEnhancedDispenser implements Listener {
 
 			Material newBucket = Material.getMaterial(bucketType);
 
+			playSound(cauldron, bucket);
 			swapBuckets(new ItemStack(newBucket), dispenser, slot);
 		} else {
 			swapCauldronContents(cauldron, bucket);
@@ -133,21 +139,25 @@ public class CauldronEnhancedDispenser implements Listener {
 		if (bucketMeta instanceof PotionMeta && ((PotionMeta) bucketMeta).getBasePotionType() == PotionType.WATER) {
 			cauldron.setType(Material.WATER_CAULDRON);
 
+			playSound(cauldron, bucket);
 			swapBuckets(new ItemStack(Material.GLASS_BOTTLE), dispenser, slot);
 		} else if (material == Material.WATER_BUCKET) {
 			cauldron.setType(Material.WATER_CAULDRON);
 
 			setMaximumCauldronLevel(cauldron);
 			
+			playSound(cauldron, bucket);
 			swapBuckets(new ItemStack(Material.BUCKET), dispenser, slot);
 		} else if (material == Material.LAVA_BUCKET) {
 			cauldron.setType(Material.LAVA_CAULDRON);
 			
+			playSound(cauldron, bucket);
 			swapBuckets(new ItemStack(Material.BUCKET), dispenser, slot);
 		} else if (material == Material.POWDER_SNOW_BUCKET) {
 			cauldron.setType(Material.POWDER_SNOW_CAULDRON);
 			setMaximumCauldronLevel(cauldron);
 			
+			playSound(cauldron, bucket);
 			swapBuckets(new ItemStack(Material.BUCKET), dispenser, slot);
 		}
 	}
@@ -186,8 +196,29 @@ public class CauldronEnhancedDispenser implements Listener {
 
 	private void swapCauldronContents(Block cauldron, ItemStack bucket) {
 		String cauldronType = bucket.getType().name().replace("_BUCKET", "_CAULDRON");
+		
+		playSound(cauldron, bucket);
+		
 		Material newCauldron = Material.getMaterial(cauldronType);
 		cauldron.setType(newCauldron);
+	}
+
+	private void playSound(Block cauldron, ItemStack bucket) {
+		String type = bucket.getType().name().toLowerCase();
+		
+		Sound sound;
+		if (type.contains("lava")) {
+			sound = Sound.ITEM_BUCKET_FILL_LAVA;
+		} else if (type.contains("water") || type.contains("potion")) {
+			sound = Sound.ITEM_BUCKET_FILL;
+		} else if (type.contains("snow")) {
+			sound = Sound.ITEM_BUCKET_FILL_POWDER_SNOW;
+		} else {
+			// placeholder sound for emptying cauldrons
+			sound = Sound.ITEM_BUCKET_EMPTY_POWDER_SNOW;
+		}
+		
+		cauldron.getLocation().getWorld().playSound(cauldron.getLocation(), sound, SoundCategory.BLOCKS, 1f, 1f);
 	}
 
 	private ItemStack createWaterBottle() {

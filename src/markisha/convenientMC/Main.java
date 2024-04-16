@@ -4,9 +4,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import markisha.events.AllowEnchantments;
+import markisha.events.CauldronEnhancedDispenser;
 import markisha.events.CombatImprovements;
 import markisha.events.EntityImprovements;
-import markisha.events.CauldronEnhancedDispenser;
 import markisha.events.StrippedLogCrafting;
 import markisha.items.MoreYieldCR;
 import markisha.items.NewItemsCR;

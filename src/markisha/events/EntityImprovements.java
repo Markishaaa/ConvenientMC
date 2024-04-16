@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Camel;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -14,10 +16,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
-import net.kyori.adventure.sound.Sound.Source;
 
 public class EntityImprovements implements Listener {
 
@@ -44,6 +42,7 @@ public class EntityImprovements implements Listener {
 
 			camel.removePassenger(villager);
 			interactingVillagers.remove(player);
+			villager.getLocation().getWorld().playSound(villager.getLocation(), Sound.ENTITY_VILLAGER_YES, SoundCategory.NEUTRAL, 1f, 1f);
 
 			return;
 		}
@@ -65,7 +64,7 @@ public class EntityImprovements implements Listener {
 
 		event.setCancelled(true);
 
-		villager.getLocation().getWorld().playSound(Sound.sound(Key.key("entity.villager.celebrate"), Source.VOICE, 1f, 1f));
+		villager.getLocation().getWorld().playSound(villager.getLocation(), Sound.ENTITY_VILLAGER_CELEBRATE, SoundCategory.NEUTRAL, 1f, 1f);
 
 		interactingVillagers.put(player, villager);
 		processingVillagers.add(villager);
@@ -97,7 +96,7 @@ public class EntityImprovements implements Listener {
 				if (villager.getLocation().distanceSquared(camel.getLocation()) <= 3) {
 					camel.addPassenger(villager);
 					villager.setTarget(null);
-					villager.getLocation().getWorld().playSound(Sound.sound(Key.key("entity.villager.celebrate"), Source.VOICE, 1f, 1f));
+					villager.getLocation().getWorld().playSound(villager.getLocation(), Sound.ENTITY_VILLAGER_CELEBRATE, SoundCategory.NEUTRAL, 1f, 1f);
 
 					processingVillagers.remove(villager);
 					interactingVillagers.remove(player);

@@ -74,7 +74,7 @@ public class EntityImprovements implements Listener {
 
 	private void pathFindToCamel(Villager villager, Camel camel, Player player) {
 		villager.setTarget(camel);
-
+		
 		new BukkitRunnable() {
 			private int ticks = 0;
 			private final int MAX_TICKS = 20;
@@ -87,10 +87,11 @@ public class EntityImprovements implements Listener {
 					villager.setTarget(null);
 
 					processingVillagers.remove(villager);
+					interactingVillagers.remove(player);
 					cancel();
 					return;
 				}
-
+				
 				ticks++;
 
 				if (villager.getLocation().distanceSquared(camel.getLocation()) <= 3) {
@@ -99,6 +100,7 @@ public class EntityImprovements implements Listener {
 					player.playSound(Sound.sound(Key.key("entity.villager.celebrate"), Source.VOICE, 1f, 1f));
 
 					processingVillagers.remove(villager);
+					interactingVillagers.remove(player);
 					cancel();
 				}
 			}

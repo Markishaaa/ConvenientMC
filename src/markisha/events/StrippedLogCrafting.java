@@ -35,7 +35,7 @@ public class StrippedLogCrafting implements Listener {
 		this.axe = new HashMap<Player, ItemStack>();
 		this.logs = new HashMap<Player, ItemStack>();
 	}
-
+	
 	@EventHandler
 	public void beforeStrippedLogCrafted(PrepareItemCraftEvent event) {
 		if (event.isRepair() || event.getRecipe() == null)

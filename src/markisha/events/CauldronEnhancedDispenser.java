@@ -218,7 +218,7 @@ public class CauldronEnhancedDispenser implements Listener {
 			sound = Sound.ITEM_BUCKET_EMPTY_POWDER_SNOW;
 		}
 		
-		cauldron.getLocation().getWorld().playSound(cauldron.getLocation(), sound, SoundCategory.BLOCKS, 1f, 1f);
+		cauldron.getWorld().playSound(cauldron.getLocation(), sound, SoundCategory.BLOCKS, 1f, 1f);
 	}
 
 	private ItemStack createWaterBottle() {

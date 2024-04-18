@@ -40,9 +40,10 @@ Dispensers now have additional functionality:
 - When facing down with a cauldron below, they can dispense water, lava, and powdered snow into the cauldrons (using buckets), as well as retrieve them.
 - You can add and retrieve layers of water to cauldrons using water bottles.
 
-## Configuration
-
-The plugin comes with a customizable configuration file that generates itself after the first run. In this file, you can selectively disable specific features if you prefer not to have them on your server.
+### 8. Recoloring Items
+All items that can be colored (like concrete, glass, candles) can now be recolored. 
+- Recipes are the same as when coloring them the first time, but now you can use any colored item with a specific dye to recolor it.
+- You can drop any colored stained clay into a cauldron with water to wash the color off (turns it into "minecraft:terracotta"). Washing away color also consumes water from the cauldron (same as washing the color of a leather armor piece would). A third of a stack lowers one level of water in a cauldron (1 full stack will consume all of the water).
 
 ## Installation
 
@@ -52,7 +53,9 @@ The plugin comes with a customizable configuration file that generates itself af
 
 ## Configuration
 
-After the first run, a `config.yml` file will be generated in the `plugins/ConvenientMC` folder. Edit this file to customize the plugin's behavior according to your preferences.
+The plugin comes with a customizable configuration file that generates itself after the first run. In this file, you can selectively disable specific features if you prefer not to have them on your server.
+
+You can find the configuration file in your server's directory under: `/plugins/ConvenientMC/config.yml`.
 
 ## Issues and Feedback
 

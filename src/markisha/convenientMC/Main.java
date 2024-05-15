@@ -4,9 +4,10 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import markisha.events.AllowEnchantments;
+import markisha.events.BreedableParrots;
+import markisha.events.CamelVillagerTransport;
 import markisha.events.CauldronEnhancedDispenser;
 import markisha.events.CombatImprovements;
-import markisha.events.EntityImprovements;
 import markisha.events.StrippedLogCrafting;
 import markisha.events.UndyeTerracotta;
 import markisha.items.MoreYieldCR;
@@ -19,15 +20,15 @@ import net.kyori.adventure.text.format.TextColor;
 public class Main extends JavaPlugin {
 
 	private ConfigurationSection features;
-
+	
 	public Main() {
 		if (getConfig().getConfigurationSection("features") == null) {
 			getConfig().createSection("features");
 			saveConfig();
 		}
-
+		
 		this.features = getConfig().getConfigurationSection("features");
-
+		
 		setDefaultBoolean("enable_stripped_log_crafting", true);
 		setDefaultBoolean("enable_more_yield_in_crafting_recipes", true);
 		setDefaultBoolean("enable_new_crafting_recipes", true);
@@ -37,6 +38,7 @@ public class Main extends JavaPlugin {
 		setDefaultBoolean("enable_cauldron_enhanced_dispensers", true);
 		setDefaultBoolean("enable_washing_terracotta", true);
 		setDefaultBoolean("enable_recoloring_items", true);
+		setDefaultBoolean("enable_breedable_parrots", true);
 	}
 
 	private void setDefaultBoolean(String key, boolean defaultValue) {
@@ -58,6 +60,7 @@ public class Main extends JavaPlugin {
 		boolean enableCauldronEnhancedDispensers = features.getBoolean("enable_cauldron_enhanced_dispensers", true);
 		boolean enableWashingTerracotta = features.getBoolean("enable_washing_terracotta", true);
 		boolean enableRecoloringItems = features.getBoolean("enable_recoloring_items", true);
+		boolean enableBreedableParrots = features.getBoolean("enable_breedable_parrots", true);
 
 		if (enableStrippedLogCrafting) {
 			StrippedLogCR slcr = new StrippedLogCR();
@@ -93,13 +96,17 @@ public class Main extends JavaPlugin {
 		}
 
 		if (enableCamelVillagerTransport) {
-			getServer().getPluginManager().registerEvents(new EntityImprovements(this), this);
+			getServer().getPluginManager().registerEvents(new CamelVillagerTransport(this), this);
 		}
 
 		if (enableCauldronEnhancedDispensers) {
 			getServer().getPluginManager().registerEvents(new CauldronEnhancedDispenser(), this);
 		}
-
+		
+		if (enableBreedableParrots) {
+			getServer().getPluginManager().registerEvents(new BreedableParrots(this), this);
+		}
+		
 		getServer().getConsoleSender().sendMessage(
 				Component.text("[ConvenientMC]: Plugin enabled!").color(TextColor.fromHexString("#FFFF00")));
 	}

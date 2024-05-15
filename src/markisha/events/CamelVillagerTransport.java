@@ -17,13 +17,14 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class EntityImprovements implements Listener {
+public class CamelVillagerTransport implements Listener {
 
-	private Plugin plugin;
+	private final Plugin plugin;
 	private final Set<Villager> processingVillagers;
 	private final Map<Player, Villager> interactingVillagers;
-
-	public EntityImprovements(Plugin plugin) {
+	
+	
+	public CamelVillagerTransport(Plugin plugin) {
 		this.plugin = plugin;
 		this.processingVillagers = new HashSet<>();
 		this.interactingVillagers = new HashMap<>();
@@ -36,13 +37,14 @@ public class EntityImprovements implements Listener {
 
 		if (rightClicked instanceof Villager && rightClicked.getVehicle() instanceof Camel) {
 			event.setCancelled(true);
-			
+
 			Villager villager = (Villager) event.getRightClicked();
 			Camel camel = (Camel) villager.getVehicle();
 
 			camel.removePassenger(villager);
 			interactingVillagers.remove(player);
-			villager.getWorld().playSound(villager.getLocation(), Sound.ENTITY_VILLAGER_YES, SoundCategory.NEUTRAL, 1f, 1f);
+			villager.getWorld().playSound(villager.getLocation(), Sound.ENTITY_VILLAGER_YES, SoundCategory.NEUTRAL, 1f,
+					1f);
 
 			return;
 		}
@@ -64,7 +66,8 @@ public class EntityImprovements implements Listener {
 
 		event.setCancelled(true);
 
-		villager.getWorld().playSound(villager.getLocation(), Sound.ENTITY_VILLAGER_CELEBRATE, SoundCategory.NEUTRAL, 1f, 1f);
+		villager.getWorld().playSound(villager.getLocation(), Sound.ENTITY_VILLAGER_CELEBRATE, SoundCategory.NEUTRAL,
+				1f, 1f);
 
 		interactingVillagers.put(player, villager);
 		processingVillagers.add(villager);
@@ -73,7 +76,7 @@ public class EntityImprovements implements Listener {
 
 	private void pathFindToCamel(Villager villager, Camel camel, Player player) {
 		villager.setTarget(camel);
-		
+
 		new BukkitRunnable() {
 			private int ticks = 0;
 			private final int MAX_TICKS = 20;
@@ -90,13 +93,14 @@ public class EntityImprovements implements Listener {
 					cancel();
 					return;
 				}
-				
+
 				ticks++;
 
 				if (villager.getLocation().distanceSquared(camel.getLocation()) <= 3) {
 					camel.addPassenger(villager);
 					villager.setTarget(null);
-					villager.getWorld().playSound(villager.getLocation(), Sound.ENTITY_VILLAGER_CELEBRATE, SoundCategory.NEUTRAL, 1f, 1f);
+					villager.getWorld().playSound(villager.getLocation(), Sound.ENTITY_VILLAGER_CELEBRATE,
+							SoundCategory.NEUTRAL, 1f, 1f);
 
 					processingVillagers.remove(villager);
 					interactingVillagers.remove(player);

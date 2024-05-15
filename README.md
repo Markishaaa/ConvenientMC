@@ -28,7 +28,8 @@ Discover new crafting possibilities, including:
 Enable the addition of "looting" to a trident exclusively through an anvil.
 
 ### 5. Combat Update
-Shields now have no delay when used (default was a 5 tick delay).
+- Shields now have no delay when used (default was a 5 tick delay).
+- When wearing an armor piece with projectile protection, your knockback is reduced when shot with a projectile by 25% per enchantment level.
 
 ### 6. Villager Transportation
 Transport villagers using camels:
@@ -44,6 +45,9 @@ Dispensers now have additional functionality:
 All items that can be colored (like concrete, glass, candles) can now be recolored. 
 - Recipes are the same as when coloring them the first time, but now you can use any colored item with a specific dye to recolor it.
 - You can drop any colored stained clay into a cauldron with water to wash the color off (turns it into "minecraft:terracotta"). Washing away color also consumes water from the cauldron (same as washing the color of a leather armor piece would). A third of a stack lowers one level of water in a cauldron (1 full stack will consume all of the water).
+
+### 9. Breedable Parrots
+Parrots are now breedable entities. You can feed two tamed parrots with a pumpkin or a melon seed and one of the parrots will drop a parrot egg. When thrown, it hatches a parrot. Parrot's variant is randomly chosen between one of the parent's variants.
 
 ## Installation
 

@@ -21,6 +21,8 @@ public class NewItemsCR {
 				CraftingBookCategory.BUILDING, Material.WHITE_WOOL);
 		
 		createMangroveLogRecipe();
+		
+		createBoneBlockRecipe();
 	}
 
 	private void createShapelessRecipe(ItemStack result, NamespacedKey key, CraftingBookCategory category,
@@ -31,7 +33,7 @@ public class NewItemsCR {
 			sr.addIngredient(ingredient);
 		}
 
-		sr.setCategory(CraftingBookCategory.BUILDING);
+		sr.setCategory(category);
 
 		Bukkit.getServer().addRecipe(sr);
 	}
@@ -43,6 +45,18 @@ public class NewItemsCR {
 
 		sr.shape("##", "##");
 		sr.setIngredient('#', Material.MANGROVE_ROOTS);
+		sr.setCategory(CraftingBookCategory.BUILDING);
+		
+		Bukkit.getServer().addRecipe(sr);
+	}
+	
+	private void createBoneBlockRecipe() {
+		ItemStack result = new ItemStack(Material.BONE_BLOCK, 3);
+		
+		ShapedRecipe sr = new ShapedRecipe(NamespacedKey.minecraft("bone_blocks"), result);
+		
+		sr.shape("###", "###", "###");
+		sr.setIngredient('#', Material.BONE);
 		sr.setCategory(CraftingBookCategory.BUILDING);
 		
 		Bukkit.getServer().addRecipe(sr);

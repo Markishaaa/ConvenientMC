@@ -74,7 +74,7 @@ public class RecoloringItemsCR {
 
 	private void createShapedRecipe(String blockType, List<Material> blockList, String colorType, Material color) {
 		String newColoredBlock = colorType + "_" + blockType;
-		ItemStack result = new ItemStack(Material.getMaterial(newColoredBlock));
+		ItemStack result = new ItemStack(Material.getMaterial(newColoredBlock), 8);
 
 		String recipeId = blockType.toLowerCase() + "_" + color.name().toLowerCase();
 		ShapedRecipe sr = new ShapedRecipe(NamespacedKey.minecraft(recipeId), result);

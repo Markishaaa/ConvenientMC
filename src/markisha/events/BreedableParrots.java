@@ -55,16 +55,12 @@ public class BreedableParrots implements Listener {
 		Player player = event.getPlayer();
 		ItemStack mainHandItem = player.getInventory().getItemInMainHand();
 
-		if (!(mainHandItem.getType() == Material.MELON_SEEDS) || mainHandItem.getType() == Material.PUMPKIN_SEEDS)
+		if (!(mainHandItem.getType() == Material.BEETROOT_SEEDS))
 			return;
 		if (!(event.getRightClicked() instanceof Parrot))
 			return;
 
 		Parrot parrot = (Parrot) event.getRightClicked();
-		UUID ownerId = parrot.getOwnerUniqueId();
-
-		if (!parrot.isTamed() || !ownerId.equals(player.getUniqueId()))
-			return;
 
 		event.setCancelled(true);
 

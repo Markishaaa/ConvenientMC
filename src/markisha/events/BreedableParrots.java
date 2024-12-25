@@ -29,6 +29,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.destroystokyo.paper.event.entity.ThrownEggHatchEvent;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 
 public class BreedableParrots implements Listener {
 
@@ -200,7 +201,7 @@ public class BreedableParrots implements Listener {
 
 		ItemStack egg = new ItemStack(Material.EGG);
 		ItemMeta meta = egg.getItemMeta();
-		meta.displayName(Component.text("Parrot Egg"));
+		meta.displayName(Component.text("Parrot Egg").decoration(TextDecoration.ITALIC, false));
 		meta.setCustomModelData(selectedVariant.ordinal());
 		egg.setItemMeta(meta);
 

@@ -74,11 +74,11 @@ public class CombatImprovements implements Listener {
 			return;
 
 		if (event.getPushedBy() instanceof Projectile || projectileMap.containsKey(event.getHitBy())) {
-			Vector vector = event.getAcceleration();
+			Vector vector = event.getKnockback();
 			double lengthSquared = vector.lengthSquared();
 			double adjustedLengthSquared = adjustLengthSquared(lengthSquared, protectionLevel);
 			
-			event.setAcceleration(setAdjustedLengthSquared(vector, adjustedLengthSquared));
+			event.setKnockback(setAdjustedLengthSquared(vector, adjustedLengthSquared));
 		}
 	}
 	
@@ -90,7 +90,7 @@ public class CombatImprovements implements Listener {
 		for (ItemStack armorPiece : armorContents) {
 			if (armorPiece == null) continue;
 			
-			int level = armorPiece.getEnchantmentLevel(Enchantment.PROTECTION_PROJECTILE);
+			int level = armorPiece.getEnchantmentLevel(Enchantment.PROJECTILE_PROTECTION);
 			
 			if (level > maxLevel) {
 				maxLevel = level;

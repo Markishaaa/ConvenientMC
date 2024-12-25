@@ -65,21 +65,21 @@ public class AllowEnchantments implements Listener {
 					Map<Enchantment, Integer> enchantments = meta.getStoredEnchants();
 
 					int level = enchantments.entrySet().stream()
-							.filter(entry -> entry.getKey().equals(Enchantment.LOOT_BONUS_MOBS)).findFirst()
+							.filter(entry -> entry.getKey().equals(Enchantment.LOOTING)).findFirst()
 							.map(Map.Entry::getValue).orElse(0);
 
 					if (level == 0)
 						return;
 
 					tridentMap.put(player, item1.clone());
-					int tridentLootingLvl = tridentMap.get(player).getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS);
+					int tridentLootingLvl = tridentMap.get(player).getEnchantmentLevel(Enchantment.LOOTING);
 
 					if (tridentLootingLvl == level && level != 3) {
 						player.setGameMode(GameMode.CREATIVE);
-						tridentMap.get(player).addUnsafeEnchantment(Enchantment.LOOT_BONUS_MOBS, level + 1);
+						tridentMap.get(player).addUnsafeEnchantment(Enchantment.LOOTING, level + 1);
 					} else if (tridentLootingLvl < level) {
 						player.setGameMode(GameMode.CREATIVE);
-						tridentMap.get(player).addUnsafeEnchantment(Enchantment.LOOT_BONUS_MOBS, level);
+						tridentMap.get(player).addUnsafeEnchantment(Enchantment.LOOTING, level);
 					}
 
 					event.setResult(tridentMap.get(player));
@@ -104,7 +104,7 @@ public class AllowEnchantments implements Listener {
 				ItemStack tridentItem = trident.getItemStack();
 
 				tridentProjLootingLvlMap.put((Player) trident.getShooter(),
-						tridentItem.getItemMeta().getEnchantLevel(Enchantment.LOOT_BONUS_MOBS));
+						tridentItem.getItemMeta().getEnchantLevel(Enchantment.LOOTING));
 			}
 		}
 	}

@@ -218,7 +218,7 @@ public class StrippedLogCrafting implements Listener {
 	}
 
 	private double getAxeDamageChance(Damageable axe) {
-		return 100 / (axe.getEnchantLevel(Enchantment.DURABILITY) + 1);
+		return 100 / (axe.getEnchantLevel(Enchantment.UNBREAKING) + 1);
 	}
 
 }
